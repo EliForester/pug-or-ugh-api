@@ -1,12 +1,14 @@
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
-from .models import Dog, UserDog, UserPref
-from .views import DogView, UserPreferenceView, UserDogView
 import random
 import string
+
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APIRequestFactory, force_authenticate, \
     APITestCase
-from rest_framework.authtoken.models import Token
+
+from .models import Dog, UserDog, UserPref
+from .views import DogView, UserPreferenceView, UserDogView
 
 # Create your tests here.
 
@@ -86,7 +88,7 @@ class PugOrTestCase(APITestCase):
                     'gender': 'm,f,u',
                     'size': 's,m,l,xl',
                     'age': 'b,y,a,s'}
-        new_userpref = UserPref.objects.create(**userpref)
+        UserPref.objects.create(**userpref)
 
         request = self.factory.get(
             reverse('userpref'),
@@ -119,9 +121,8 @@ class PugOrTestCase(APITestCase):
                     'gender': 'm,f,u',
                     'size': 's,m,l,xl',
                     'age': 'b,y,a,s'}
-        new_userpref = UserPref.objects.create(**userpref)
-
-        userprefs = UserPref.objects.all()[0]
+        UserPref.objects.create(**userpref)
+        #userprefs = UserPref.objects.all()[0]
 
         resp = view(request, pk=-1, liked_status=liked_status)
         self.assertEqual(resp.status_code, 200)
@@ -134,7 +135,7 @@ class PugOrTestCase(APITestCase):
         genders = ','.join(genders)
 
         userpref['gender'] = genders
-        new_userpref = UserPref.objects.update(**userpref)
+        UserPref.objects.update(**userpref)
 
         resp = view(request, pk=-1, liked_status=liked_status)
         self.assertEqual(resp.status_code, 404)

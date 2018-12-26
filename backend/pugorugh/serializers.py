@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
-from . import models
 from rest_framework import serializers
+
+from . import models
 
 
 class UserSerializer(serializers.ModelSerializer):

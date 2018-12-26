@@ -1,16 +1,16 @@
+from functools import reduce
+import operator
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, Http404, HttpResponse
-from functools import reduce
-from . import models
-import operator
-from rest_framework import permissions
+from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework import status
 
+from . import models
 from . import serializers
 
 valid_liked_statuses = {'liked': 'l', 'disliked': 'd', 'undecided': None}
@@ -65,7 +65,7 @@ class DogView(RetrieveUpdateAPIView):
             if userpref.age:
                 ages = userpref.age
                 queryset = queryset.filter(map_age_to_q(ages))
-        except ObjectDoesNotExist as e:
+        except ObjectDoesNotExist:
             pass
         if liked_status is not None:
             queryset = queryset.filter(
@@ -98,7 +98,7 @@ class UserDogView(RetrieveUpdateAPIView):
                 userdog = models.UserDog.objects.filter(dog=dog,
                                                         user=self.request.user
                                                         ).delete()
-            except Exception as e:
+            except Exception:
                 raise Http404
         else:
             try:
@@ -131,7 +131,7 @@ class UserPreferenceView(RetrieveUpdateAPIView):
     def put(self, request, *args, **kwargs):
         serializer = serializers.UserPrefSerializer(data=self.request.data)
         if serializer.is_valid():
-            save_data = serializer.save(user=self.request.user)
+            serializer.save(user=self.request.user)
         else:
             return Http404('Could not save preferences')
         return HttpResponse('/')
