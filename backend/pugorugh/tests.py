@@ -122,7 +122,6 @@ class PugOrTestCase(APITestCase):
                     'size': 's,m,l,xl',
                     'age': 'b,y,a,s'}
         UserPref.objects.create(**userpref)
-        #userprefs = UserPref.objects.all()[0]
 
         resp = view(request, pk=-1, liked_status=liked_status)
         self.assertEqual(resp.status_code, 200)
