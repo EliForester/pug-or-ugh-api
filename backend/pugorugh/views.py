@@ -17,9 +17,9 @@ valid_liked_statuses = {'liked': 'l', 'disliked': 'd', 'undecided': None}
 
 
 def is_liked(liked_status):
-    """Quick mapping from key->value for valid_liked_statuses
-    :param liked_status: liked, disliked, undecided
-    :return: l, d, None
+    """Quick mapping from key->value string for valid_liked_statuses
+    :param liked_status: 'liked', 'disliked', 'undecided'
+    :return: 'l', 'd', None
     """
     try:
         return valid_liked_statuses[liked_status]
@@ -28,9 +28,9 @@ def is_liked(liked_status):
 
 
 def reverse_liked(value):
-    """Quick mapping from value->key for valid_liked_statuses
-    :param value: l, d, None
-    :return: liked, disliked, undecided
+    """Quick mapping from value->key string for valid_liked_statuses
+    :param value: 'l', 'd', None
+    :return: 'liked', 'disliked', 'undecided'
     """
     for key in valid_liked_statuses:
         if valid_liked_statuses[key] == value:
@@ -38,10 +38,10 @@ def reverse_liked(value):
 
 
 def map_age_to_q(ages):
-    """Builds a Q query for dog age based on db values like 'a,s,y'
+    """Builds a Q query for dog age based on db values string like 'a,s,y'
 
     :param ages: Comma-delimited string with possible values [b,y,a,s]
-    :return: Q query string for filtering dog ages
+    :return: Q query object for filtering dog ages
     """
     ages = ages.split(',')
     age_range_map = {'b': [0, 6], 'y': [7, 23], 'a': [24, 70], 's': [71, 360]}
