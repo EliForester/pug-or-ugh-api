@@ -17,6 +17,10 @@ valid_liked_statuses = {'liked': 'l', 'disliked': 'd', 'undecided': None}
 
 
 def is_liked(liked_status):
+    """Quick mapping from key->value for valid_liked_statuses
+    :param liked_status: liked, disliked, undecided
+    :return: l, d, None
+    """
     try:
         return valid_liked_statuses[liked_status]
     except KeyError:
@@ -24,12 +28,21 @@ def is_liked(liked_status):
 
 
 def reverse_liked(value):
+    """Quick mapping from value->key for valid_liked_statuses
+    :param value: l, d, None
+    :return: liked, disliked, undecided
+    """
     for key in valid_liked_statuses:
         if valid_liked_statuses[key] == value:
             return key
 
 
 def map_age_to_q(ages):
+    """Builds a Q query for dog age based on db values like 'a,s,y'
+
+    :param ages: Comma-delimited string with possible values [b,y,a,s]
+    :return: Q query string for filtering dog ages
+    """
     ages = ages.split(',')
     age_range_map = {'b': [0, 6], 'y': [7, 23], 'a': [24, 70], 's': [71, 360]}
     age_ranges = [age_range_map[x] for x in ages]
@@ -56,6 +69,7 @@ class DogView(RetrieveUpdateAPIView):
         queryset = models.Dog.objects.all()
         liked_status = is_liked(self.kwargs['liked_status'])
         try:
+            # Check if there are userprefs
             userpref = models.UserPref.objects.get(
                 user=self.request.user)
             queryset = queryset.filter(
@@ -66,12 +80,15 @@ class DogView(RetrieveUpdateAPIView):
                 ages = userpref.age
                 queryset = queryset.filter(map_age_to_q(ages))
         except ObjectDoesNotExist:
+            # Pass if no userprefs
             pass
         if liked_status is not None:
+            # Filter according to status if exists
             queryset = queryset.filter(
                 userdog__status=liked_status,
                 userdog__user=self.request.user)
         else:
+            # Just get the ones with no status
             queryset = queryset.filter().exclude(
                 userdog__user=self.request.user)
         return queryset
@@ -95,14 +112,14 @@ class UserDogView(RetrieveUpdateAPIView):
         dog = models.Dog.objects.get(id=self.kwargs['pk'])
         if self.kwargs['liked_status'] == 'undecided':
             try:
-                userdog = models.UserDog.objects.filter(dog=dog,
-                                                        user=self.request.user
-                                                        ).delete()
+                models.UserDog.objects.filter(dog=dog,
+                                              user=self.request.user
+                                              ).delete()
             except Exception:
                 raise Http404
         else:
             try:
-                userdog, updated = models.UserDog.objects.update_or_create(
+                models.UserDog.objects.update_or_create(
                     user=self.request.user,
                     dog=dog,
                     defaults={'status': is_liked(self.kwargs['liked_status'])}

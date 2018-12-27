@@ -11,28 +11,43 @@ userpref_ages = ['b', 'y', 'a', 's']
 
 
 def validate_dog_gender(value):
-    # "m" for male, "f" for female, "u" for unknown
+    """ Validator for dog gender:
+        "m" for male, "f" for female, "u" for unknown
+    :param value: string, one character
+    :return: raise validation error if not in m,f,u
+    """
     if value not in dog_genders:
         raise ValidationError('Dog gender must be in {}'.format(dog_genders))
 
 
 def validate_dog_size(value):
-    # "s" for small, "m" for medium, "l" for large,
-    # "xl" for extra large, "u" for unknown
+    """ Validator for dog size:
+        "s" for small, "m" for medium, "l" for large,
+        "xl" for extra large, "u" for unknown
+    :param value: string, one character
+    :return: raise validation error if not in s,m,l,xl,u
+    """
     if value not in dog_sizes:
         raise ValidationError('Dog size must be in {}'.format(dog_sizes))
 
 
 def validate_userdog_status(value):
-    # "l" for liked, "d" for disliked
+    """ Validator for userdog status:
+        "l" for liked, "d" for disliked
+    :param value: string, one character
+    :return: raise validation error if not in l,d
+    """
     if value not in userdog_statuses:
         raise ValidationError(
             'Dog size must be in {}'.format(userdog_statuses))
 
 
 def validate_userpref_gender(value):
-    # "m" for male, "f" for female
-    # age, gender, and size can contain multiple, comma-separated values
+    """ Validator for userpref gender:
+        "m" for male, "f" for female
+    :param value: string, comma-separated values
+    :return: raise validation error if not in m,f
+    """
     values = value.split(',')
     for value in values:
         if len(value) > 1 or value not in userpref_genders:
@@ -41,8 +56,11 @@ def validate_userpref_gender(value):
 
 
 def validate_userpref_size(value):
-    # "s" for small, "m" for medium, "l" for large, "xl" for extra large
-    # age, gender, and size can contain multiple, comma-separated values
+    """ Validator for userpref size:
+        "s" for small, "m" for medium, "l" for large, "xl" for extra large
+    :param value: string, comma-separated values
+    :return: raise validation error if not in s,m,l,xl
+    """
     values = value.split(',')
     for value in values:
         if value not in userpref_sizes:
@@ -51,8 +69,11 @@ def validate_userpref_size(value):
 
 
 def validate_userpref_age(value):
-    # "b" for baby, "y" for young, "a" for adult, "s" for senior
-    # age, gender, and size can contain multiple, comma-separated values
+    """ Validator for userpref size:
+        "b" for baby, "y" for young, "a" for adult, "s" for senior
+    :param value: string, comma-separated values
+    :return: raise validation error if not in b,y,a,s
+    """
     values = value.split(',')
     for value in values:
         if len(value) > 1 or value not in userpref_ages:
