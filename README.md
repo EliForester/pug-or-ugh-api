@@ -38,8 +38,10 @@ Created on Python 3
 requirements.txt
 ```
 coverage==4.5.2
-Django==1.9.9
-djangorestframework==3.4.1
+Django==2.2.24
+djangorestframework==3.11.2
+pytz==2021.1
+sqlparse==0.4.1
 ```
 
 ## Test coverage

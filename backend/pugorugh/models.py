@@ -99,7 +99,7 @@ class Dog(models.Model):
 
 
 class UserDog(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     dog = models.ForeignKey(Dog,
                             related_name='userdog',
                             on_delete=models.CASCADE)
